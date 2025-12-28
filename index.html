@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cube Jump Game</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #111;
+      margin: 0;
+    }
+
+    #game {
+      position: relative;
+      width: 600px;
+      height: 200px;
+      background: #222;
+      overflow: hidden;
+      border: 2px solid white;
+    }
+
+    #player {
+      position: absolute;
+      bottom: 0;
+      left: 50px;
+      width: 30px;
+      height: 30px;
+      background: cyan;
+    }
+
+    #obstacle {
+      position: absolute;
+      bottom: 0;
+      right: -30px;
+      width: 30px;
+      height: 30px;
+      background: red;
+      animation: moveObstacle 2s linear infinite;
+    }
+
+    @keyframes moveObstacle {
+      from { right: -30px; }
+      to { right: 600px; }
+    }
+
+    .jump {
+      animation: jump 0.5s ease-out;
+    }
+
+    @keyframes jump {
+      0%   { bottom: 0; }
+      50%  { bottom: 80px; }
+      100% { bottom: 0; }
+    }
+
+    #score {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      color: white;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+    <div id="score">Score: 0</div>
+    <div id="player"></div>
+    <div id="obstacle"></div>
+  </div>
+
+  <script>
+    const player = document.getElementById("player");
+    const obstacle = document.getElementById("obstacle");
+    const scoreText = document.getElementById("score");
+
+    let score = 0;
+    let jumping = false;
+
+    document.addEventListener("keydown", () => {
+      if (!jumping) {
+        jumping = true;
+        player.classList.add("jump");
+        setTimeout(() => {
+          player.classList.remove("jump");
+          jumping = false;
+        }, 500);
+      }
+    });
+
+    setInterval(() => {
+      const playerBottom = parseInt(
+        window.getComputedStyle(player).getPropertyValue("bottom")
+      );
+      const obstacleRight = parseInt(
+        window.getComputedStyle(obstacle).getPropertyValue("right")
+      );
+
+      if (obstacleRight > 520 && obstacleRight < 550 && playerBottom < 30) {
+        alert("Game Over! Score: " + score);
+        score = 0;
+        scoreText.textContent = "Score: 0";
+      } else {
+        score++;
+        scoreText.textContent = "Score: " + score;
+      }
+    }, 100);
+  </script>
+</body>
+</html>
